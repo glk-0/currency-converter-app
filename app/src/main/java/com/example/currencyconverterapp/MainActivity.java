@@ -2,6 +2,8 @@ package com.example.currencyconverterapp;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue queue;
     private Double exchangeRate;
     private String selectedCurrencyCode, targetCurrencyCode;
+    private RecyclerView historyRecView;
+    private ArrayList<Conversion> conversions;
 
 
     @Override
@@ -46,7 +50,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //TODO: change the editText for amount to number and add history button with the Intent
+
         initViews();
+        setHistoryRecViewAdapter();
         queue= initRequestQueue(queue);
         fetchCurrencyList();
         setOnClickListeners();
@@ -64,7 +71,14 @@ public class MainActivity extends AppCompatActivity {
         imgSwapCurrency = findViewById(R.id.imgSwapCurrency);
         btnCheckRate = findViewById(R.id.btnCheckRate);
         txtCurrentRate= findViewById(R.id.txtCurrentRate);
+        historyRecView = findViewById(R.id.historyRecView);
 
+    }
+    private void setHistoryRecViewAdapter(){
+        conversions= new ArrayList<>();
+        historyRecViewAdapter adapter = new historyRecViewAdapter();
+        historyRecView.setAdapter(adapter);
+        historyRecView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
     }
     private RequestQueue initRequestQueue(RequestQueue queue){
         if(queue == null){
@@ -117,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         btnCheckRate.setOnClickListener(new View.OnClickListener() {
+            //TODO: Reduce the number of decimals for the results of conversion
             @Override
             public void onClick(View view) {
                 selectedCurrencyCode = spnSourceCurrency.getSelectedItem().toString().substring(0,3);
