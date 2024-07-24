@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -35,13 +37,12 @@ import java.util.Iterator;
 public class MainActivity extends AppCompatActivity {
     private TextView txtSelectCurrency, txtTargetAmount, txtCurrentRate;
     private Spinner spnSourceCurrency,spnTargetCurrency;
-    private Button btnConvert, btnCheckRate;
+    private Button btnConvert, btnCheckRate, btnHistory;
     private EditText edtSourceAmount;
     private ImageView imgSwapCurrency;
     private RequestQueue queue;
     private Double exchangeRate;
     private String selectedCurrencyCode, targetCurrencyCode;
-    private RecyclerView historyRecView;
     private ArrayList<Conversion> conversions;
 
 
@@ -50,10 +51,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TODO: change the editText for amount to number and add history button with the Intent
 
         initViews();
-        setHistoryRecViewAdapter();
         queue= initRequestQueue(queue);
         fetchCurrencyList();
         setOnClickListeners();
@@ -71,14 +70,8 @@ public class MainActivity extends AppCompatActivity {
         imgSwapCurrency = findViewById(R.id.imgSwapCurrency);
         btnCheckRate = findViewById(R.id.btnCheckRate);
         txtCurrentRate= findViewById(R.id.txtCurrentRate);
-        historyRecView = findViewById(R.id.historyRecView);
+        btnHistory= findViewById(R.id.btnHistory);
 
-    }
-    private void setHistoryRecViewAdapter(){
-        conversions= new ArrayList<>();
-        historyRecViewAdapter adapter = new historyRecViewAdapter();
-        historyRecView.setAdapter(adapter);
-        historyRecView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
     }
     private RequestQueue initRequestQueue(RequestQueue queue){
         if(queue == null){
@@ -106,8 +99,8 @@ public class MainActivity extends AppCompatActivity {
                                     exchangeRate= data.getDouble(targetCurrencyCode);
                                     Double enteredAmount = Double.parseDouble(edtSourceAmount.getText().toString());
                                     Double targetAmount = enteredAmount*exchangeRate;
-                                    txtTargetAmount.setText("Converted Amount: "+ enteredAmount.toString()+" "+selectedCurrencyCode+"= "+targetAmount.toString()+" "+targetCurrencyCode);
-                                    txtCurrentRate.setText("Current Rate: 1.0 "+ selectedCurrencyCode+" = " +exchangeRate.toString()+" "+targetCurrencyCode);
+                                    txtTargetAmount.setText("Converted Amount: "+ enteredAmount.toString()+" "+selectedCurrencyCode+"= "+String.format("%.4f", targetAmount)+" "+targetCurrencyCode);
+                                    txtCurrentRate.setText("Current Rate: 1.0 "+ selectedCurrencyCode+" = " +String.format("%.4f", exchangeRate)+" "+targetCurrencyCode);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     throw new RuntimeException(e);
@@ -131,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         btnCheckRate.setOnClickListener(new View.OnClickListener() {
-            //TODO: Reduce the number of decimals for the results of conversion
             @Override
             public void onClick(View view) {
                 selectedCurrencyCode = spnSourceCurrency.getSelectedItem().toString().substring(0,3);
@@ -145,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                                 try {
                                     JSONObject data = response.getJSONObject("data");
                                     exchangeRate= data.getDouble(targetCurrencyCode);
-                                    txtCurrentRate.setText("Current Rate: 1.0 "+ selectedCurrencyCode+" = " +exchangeRate.toString()+" "+targetCurrencyCode);
+                                    txtCurrentRate.setText("Current Rate: 1.0 "+ selectedCurrencyCode+" = " +String.format("%.4f",exchangeRate)+" "+targetCurrencyCode);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     throw new RuntimeException(e);
@@ -158,6 +150,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 queue.add(request);
+            }
+        });
+        btnHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+                startActivity(intent);
             }
         });
     }
