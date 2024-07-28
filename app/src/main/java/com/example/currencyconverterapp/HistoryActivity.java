@@ -25,7 +25,7 @@ public class HistoryActivity extends AppCompatActivity {
         historyRecView = findViewById(R.id.historyRecView);
 
         historyRecView.setAdapter(adapter);
-        historyRecView.setLayoutManager(new GridLayoutManager(this,2));
+        historyRecView.setLayoutManager(new GridLayoutManager(this,1));
 
         dataBaseHelper= MainActivity.getDataBaseHelper();
 

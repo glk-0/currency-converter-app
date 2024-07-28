@@ -3,6 +3,7 @@ package com.example.currencyconverterapp;
 public class Conversion {
     private String baseCurrencyCode, targetCurrencyCode;
     private Double baseAmount, targetAmount, changeRate;
+    private boolean isExpanded;
 
 
     public Conversion(String baseCurrencyCode, String targetCurrencyCode, Double baseAmount, Double targetAmount, Double changeRate) {
@@ -11,6 +12,15 @@ public class Conversion {
         this.baseAmount = baseAmount;
         this.targetAmount = targetAmount;
         this.changeRate = changeRate;
+        this.isExpanded= false;
+    }
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        isExpanded = expanded;
     }
 
     public String getBaseCurrencyCode() {

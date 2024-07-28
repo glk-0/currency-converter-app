@@ -1,9 +1,12 @@
 package com.example.currencyconverterapp;
 
 import android.content.Context;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,15 +34,25 @@ public class historyRecViewAdapter extends RecyclerView.Adapter<historyRecViewAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.txtBaseCurrency.setText("From: "+conversions.get(position).getBaseCurrencyCode());
-        holder.txtTargetCurrency.setText("To: "+conversions.get(position).getTargetCurrencyCode());
+        holder.txtBaseCurrencyHistory.setText("From: "+conversions.get(position).getBaseCurrencyCode());
+        holder.txtTargetCurrencyHistory.setText("To: "+conversions.get(position).getTargetCurrencyCode());
+        holder.txtBaseAmountHistory.setText("Base Amount: "+ conversions.get(position).getBaseAmount().toString()+" "+ conversions.get(position).getBaseCurrencyCode().toString());
+        holder.txtTargetAmountHistory.setText("Target Amount: "+ conversions.get(position).getBaseAmount().toString()+" "+ conversions.get(position).getTargetCurrencyCode().toString());
+        holder.txtExchangeRateHistory.setText("Exchange Rate: "+ String.format("%.4f", conversions.get(position).getChangeRate()));
 
-        holder.parent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, "Item Selected", Toast.LENGTH_SHORT).show();
-            }
-        });
+
+//
+        boolean isExpanded = conversions.get(position).isExpanded();
+        TransitionManager.beginDelayedTransition(holder.parent);
+
+        if (isExpanded){
+            holder.expandedRelLayout.setVisibility(View.VISIBLE);
+            holder.btnDownArrow.setVisibility(View.GONE);
+        }else{
+            holder.expandedRelLayout.setVisibility(View.GONE);
+            holder.btnDownArrow.setVisibility(View.VISIBLE);
+
+        }
     }
 
     @Override
@@ -54,13 +67,41 @@ public class historyRecViewAdapter extends RecyclerView.Adapter<historyRecViewAd
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private CardView parent;
-        private TextView txtBaseCurrency, txtTargetCurrency;
+        private TextView txtBaseCurrencyHistory, txtTargetCurrencyHistory,txtBaseAmountHistory, txtTargetAmountHistory,txtExchangeRateHistory;
+        private ImageView btnUpArrow, btnDownArrow;
+        private RelativeLayout expandedRelLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             parent = itemView.findViewById(R.id.parent);
-            txtBaseCurrency= itemView.findViewById(R.id.txtBaseCurrency);
-            txtTargetCurrency= itemView.findViewById(R.id.txtTargetCurrency);
+            txtBaseCurrencyHistory= itemView.findViewById(R.id.txtBaseCurrencyHistory);
+            txtTargetCurrencyHistory= itemView.findViewById(R.id.txtTargetCurrencyHistory);
+            txtBaseAmountHistory = itemView.findViewById(R.id.txtBaseAmountHistory);
+            txtTargetAmountHistory = itemView.findViewById(R.id.txtTargetAmountHistory);
+            txtExchangeRateHistory = itemView.findViewById(R.id.txtExchangeRateHistory);
+            btnUpArrow = itemView.findViewById(R.id.btnUpArrow);
+            btnDownArrow = itemView.findViewById(R.id.btnDownArrow);
+            expandedRelLayout = itemView.findViewById(R.id.expandedRelLayout);
+
+            btnDownArrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Conversion conversion = conversions.get(getAdapterPosition());
+                    conversion.setExpanded(!conversion.isExpanded());
+                    notifyItemChanged(getAdapterPosition());
+
+                }
+            });
+            btnUpArrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Conversion conversion = conversions.get(getAdapterPosition());
+                    conversion.setExpanded(!conversion.isExpanded());
+                    notifyItemChanged(getAdapterPosition());
+                }
+            });
+
+
         }
     }
 }
