@@ -12,9 +12,10 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class historyRecViewAdapter extends RecyclerView.Adapter<historyRecViewAdapter.ViewHolder>{
-    private ArrayList<Conversion> conversions = new ArrayList<>();
+    private List<Conversion> conversions = new ArrayList<>();
     private Context mContext;
     public historyRecViewAdapter(Context mContext){
         this.mContext=mContext;
@@ -46,7 +47,7 @@ public class historyRecViewAdapter extends RecyclerView.Adapter<historyRecViewAd
         return conversions.size();
     }
 
-    public void setConversions(ArrayList<Conversion> conversions) {
+    public void setConversions(List<Conversion> conversions) {
         this.conversions = conversions;
         notifyDataSetChanged();
     }

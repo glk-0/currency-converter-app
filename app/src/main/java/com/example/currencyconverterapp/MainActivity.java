@@ -43,14 +43,13 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue queue;
     private Double exchangeRate;
     private String selectedCurrencyCode, targetCurrencyCode;
-    private ArrayList<Conversion> conversions;
+    private static DataBaseHelper dataBaseHelper;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         initViews();
         queue= initRequestQueue(queue);
@@ -71,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         btnCheckRate = findViewById(R.id.btnCheckRate);
         txtCurrentRate= findViewById(R.id.txtCurrentRate);
         btnHistory= findViewById(R.id.btnHistory);
+
+        dataBaseHelper = new DataBaseHelper(MainActivity.this,"history_db",null,1);
 
     }
     private RequestQueue initRequestQueue(RequestQueue queue){
@@ -101,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
                                     Double targetAmount = enteredAmount*exchangeRate;
                                     txtTargetAmount.setText("Converted Amount: "+ enteredAmount.toString()+" "+selectedCurrencyCode+"= "+String.format("%.4f", targetAmount)+" "+targetCurrencyCode);
                                     txtCurrentRate.setText("Current Rate: 1.0 "+ selectedCurrencyCode+" = " +String.format("%.4f", exchangeRate)+" "+targetCurrencyCode);
+
+                                    Conversion conversion = new Conversion(selectedCurrencyCode,targetCurrencyCode,enteredAmount,targetAmount,exchangeRate);
+                                    boolean success = dataBaseHelper.addOne(conversion);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     throw new RuntimeException(e);
@@ -109,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MainActivity.this, "Something is Wrong!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Something went Wrong!", Toast.LENGTH_SHORT).show();
                     }
                 });
                 queue.add(request);
@@ -183,9 +187,6 @@ public class MainActivity extends AppCompatActivity {
                             spnSourceCurrency.setAdapter(adapter);
                             spnTargetCurrency.setAdapter(adapter);
 
-                            selectedCurrencyCode = spnSourceCurrency.getSelectedItem().toString().substring(0,3);
-                            targetCurrencyCode = spnTargetCurrency.getSelectedItem().toString().substring(0,3);
-
                         } catch (Exception e) {
                             e.printStackTrace();
                             Toast.makeText(MainActivity.this, "Error parsing currency list", Toast.LENGTH_SHORT).show();
@@ -200,5 +201,10 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         queue.add(request);
-    }}
+    }
+
+    public static DataBaseHelper getDataBaseHelper() {
+        return dataBaseHelper;
+    }
+}
 
