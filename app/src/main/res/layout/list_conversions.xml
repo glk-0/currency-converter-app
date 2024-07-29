@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent"
+    app:cardCornerRadius="7dp"
+    app:cardElevation="7dp"
+    android:layout_margin="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/collapsedRelLayout">
+
+            <TextView
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtBaseCurrencyHistory"
+                android:text="From:"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="7dp"
+                android:layout_marginLeft="3dp">
+            </TextView>
+
+            <TextView
+                android:id="@+id/txtTargetCurrencyHistory"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtBaseCurrencyHistory"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="7dp"
+                android:text="To:"
+                android:textSize="16sp"
+                android:textStyle="bold">
+
+            </TextView>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnDownArrow"
+                android:src="@drawable/ic_extend"
+                android:layout_below="@id/txtTargetCurrencyHistory"
+                android:layout_alignRight="@id/txtTargetCurrencyHistory">
+
+            </ImageView>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/expandedRelLayout"
+            android:layout_below="@id/collapsedRelLayout"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtBaseAmountHistory"
+                android:text="Base Amount:"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="7dp"
+                android:layout_marginLeft="3dp">
+
+            </TextView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtTargetAmountHistory"
+                android:text="Target Amount:"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="7dp"
+                android:layout_marginLeft="3dp"
+                android:layout_below="@+id/txtBaseAmountHistory">
+
+            </TextView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Exchange Rate: "
+                android:id="@+id/txtExchangeRateHistory"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="7dp"
+                android:layout_marginLeft="10dp"
+                android:layout_below="@+id/txtTargetAmountHistory">
+
+            </TextView>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_up_arrow"
+                android:id="@+id/btnUpArrow"
+                android:layout_below="@+id/txtExchangeRateHistory"
+                android:layout_alignRight="@id/txtExchangeRateHistory">
+
+            </ImageView>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+
+
+
+
+</com.google.android.material.card.MaterialCardView>

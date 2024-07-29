@@ -2,8 +2,12 @@ package com.example.currencyconverterapp;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,12 +37,13 @@ import java.util.Iterator;
 public class MainActivity extends AppCompatActivity {
     private TextView txtSelectCurrency, txtTargetAmount, txtCurrentRate;
     private Spinner spnSourceCurrency,spnTargetCurrency;
-    private Button btnConvert, btnCheckRate;
+    private Button btnConvert, btnCheckRate, btnHistory;
     private EditText edtSourceAmount;
     private ImageView imgSwapCurrency;
     private RequestQueue queue;
     private Double exchangeRate;
     private String selectedCurrencyCode, targetCurrencyCode;
+    private static DataBaseHelper dataBaseHelper;
 
 
     @Override
@@ -64,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
         imgSwapCurrency = findViewById(R.id.imgSwapCurrency);
         btnCheckRate = findViewById(R.id.btnCheckRate);
         txtCurrentRate= findViewById(R.id.txtCurrentRate);
+        btnHistory= findViewById(R.id.btnHistory);
+
+        dataBaseHelper = new DataBaseHelper(MainActivity.this,"history_db",null,1);
 
     }
     private RequestQueue initRequestQueue(RequestQueue queue){
@@ -92,8 +100,11 @@ public class MainActivity extends AppCompatActivity {
                                     exchangeRate= data.getDouble(targetCurrencyCode);
                                     Double enteredAmount = Double.parseDouble(edtSourceAmount.getText().toString());
                                     Double targetAmount = enteredAmount*exchangeRate;
-                                    txtTargetAmount.setText("Converted Amount: "+ enteredAmount.toString()+" "+selectedCurrencyCode+"= "+targetAmount.toString()+" "+targetCurrencyCode);
-                                    txtCurrentRate.setText("Current Rate: 1.0 "+ selectedCurrencyCode+" = " +exchangeRate.toString()+" "+targetCurrencyCode);
+                                    txtTargetAmount.setText("Converted Amount: "+ enteredAmount.toString()+" "+selectedCurrencyCode+"= "+String.format("%.4f", targetAmount)+" "+targetCurrencyCode);
+                                    txtCurrentRate.setText("Current Rate: 1.0 "+ selectedCurrencyCode+" = " +String.format("%.4f", exchangeRate)+" "+targetCurrencyCode);
+
+                                    Conversion conversion = new Conversion(selectedCurrencyCode,targetCurrencyCode,enteredAmount,targetAmount,exchangeRate);
+                                    boolean success = dataBaseHelper.addOne(conversion);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     throw new RuntimeException(e);
@@ -102,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MainActivity.this, "Something is Wrong!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Something went Wrong!", Toast.LENGTH_SHORT).show();
                     }
                 });
                 queue.add(request);
@@ -130,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                                 try {
                                     JSONObject data = response.getJSONObject("data");
                                     exchangeRate= data.getDouble(targetCurrencyCode);
-                                    txtCurrentRate.setText("Current Rate: 1.0 "+ selectedCurrencyCode+" = " +exchangeRate.toString()+" "+targetCurrencyCode);
+                                    txtCurrentRate.setText("Current Rate: 1.0 "+ selectedCurrencyCode+" = " +String.format("%.4f",exchangeRate)+" "+targetCurrencyCode);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     throw new RuntimeException(e);
@@ -143,6 +154,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 queue.add(request);
+            }
+        });
+        btnHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -169,9 +187,6 @@ public class MainActivity extends AppCompatActivity {
                             spnSourceCurrency.setAdapter(adapter);
                             spnTargetCurrency.setAdapter(adapter);
 
-                            selectedCurrencyCode = spnSourceCurrency.getSelectedItem().toString().substring(0,3);
-                            targetCurrencyCode = spnTargetCurrency.getSelectedItem().toString().substring(0,3);
-
                         } catch (Exception e) {
                             e.printStackTrace();
                             Toast.makeText(MainActivity.this, "Error parsing currency list", Toast.LENGTH_SHORT).show();
@@ -186,5 +201,10 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         queue.add(request);
-    }}
+    }
+
+    public static DataBaseHelper getDataBaseHelper() {
+        return dataBaseHelper;
+    }
+}
 

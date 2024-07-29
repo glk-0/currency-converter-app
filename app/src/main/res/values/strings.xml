@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">currencyConverterApp</string>
     <string name="api_key">fca_live_Qp76T6gQRWh1Rwq6gWiR9EmyHDjT6sGnDK5eRFrM</string>
+    <string name="ClearAll">Clear All</string>
 </resources>
