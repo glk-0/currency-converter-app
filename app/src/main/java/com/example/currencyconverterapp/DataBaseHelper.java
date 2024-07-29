@@ -80,4 +80,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return conversions;
     }
+    public boolean clearAll(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        try {
+            db.execSQL("DELETE FROM " + CONVERSION_TABLE);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            db.close();
+        }
+    }
 }
