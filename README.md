@@ -18,7 +18,8 @@ Designed with a focus on simplicity and usability, it provides accurate conversi
 - **History**: Check the history of previous conversions and option to clear all.
 
 ## History Layout
-![Screenshot_20241215_164803](https://github.com/user-attachments/assets/3c91b0a1-c6aa-4ac6-a05c-d9f81a6f4e25)
+![history layout](https://github.com/user-attachments/assets/67e7cdc7-6e75-431f-94d9-04530cb8f6ab)
+
 
 ## Technologies Used
 
