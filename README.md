@@ -28,11 +28,6 @@ Designed with a focus on simplicity and usability, it provides accurate conversi
 - Java
 - Volley (HTTP)
 - SQLite Database
-  
-## Getting Started
-
-### Prerequisites
-- Android Studio
 
 ## Installation
 
