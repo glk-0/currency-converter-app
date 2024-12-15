@@ -6,8 +6,9 @@ The **Currency Converter App** is a Android application that allows users to con
 Designed with a focus on simplicity and usability, it provides accurate conversions quickly and efficiently across 30+ global currencies.
 
 ## Main Layout
+![Screenshot_20241215_164730](https://github.com/user-attachments/assets/e945f956-7667-4d3e-8409-cd7642eba5a1)
 
-![Screenshot_20241215_164730](https://github.com/user-attachments/assets/02cc1524-b3c9-4ffc-8b3f-62a23b5772ec)
+
 
 ## Features
 
